@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Analytics from "@/components/Analytics";
 
 // (marketing) group layout: big branded header + footer for public pages.
 // It does NOT render <html>/<body> - that is the root layout's job.
@@ -27,6 +28,7 @@ export default function MarketingLayout({
       </main>
       <footer style={{ padding: "2rem", background: "#f1f5f9", color: "#0f172a", textAlign: "center" }}>
         © 2026 OurProduct
+        <Analytics />
       </footer>
     </div>
   );
