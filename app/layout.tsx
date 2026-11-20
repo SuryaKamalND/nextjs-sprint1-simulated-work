@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,7 +18,10 @@ export const metadata: Metadata = {
 };
 
 // Root layout: the only file that renders <html> and <body>.
-// Global chrome (Header + Footer) lives here once, so every page inherits it.
+// Surface-specific chrome now lives in each route group's own layout:
+//   (marketing) -> big branded header + footer
+//   (auth)      -> centred card, no chrome
+//   (app)       -> global Header/Footer + dashboard sidebar
 export default function RootLayout({
   children,
 }: {
@@ -28,11 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
     </html>
   );
 }
