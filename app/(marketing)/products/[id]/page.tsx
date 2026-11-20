@@ -1,5 +1,6 @@
 // app/(marketing)/products/[id]/page.tsx  ->  /products/shoe-001, /products/shirt-001, ...
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { products } from "@/lib/products";
 
 export default async function ProductPage({
@@ -11,12 +12,8 @@ export default async function ProductPage({
   const product = products[id];
 
   if (!product) {
-    return (
-      <section>
-        <h1>Product Not Found</h1>
-        <p>No product with ID: {id}</p>
-      </section>
-    );
+    // No /products/not-found.tsx exists, so this falls back to the global app/not-found.tsx.
+    notFound();
   }
 
   return (
