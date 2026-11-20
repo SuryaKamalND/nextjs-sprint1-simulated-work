@@ -1,0 +1,15 @@
+# DATABASE_URL commented out in .env.local, then `npm run dev`:
+
+> next dev
+   ▲ Next.js 15.5.29
+   - Local:        http://localhost:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled /instrumentation in 320ms (23 modules)
+Error: An error occurred while loading instrumentation hook: Missing required environment variable: DATABASE_URL. Check .env.local or your environment configuration.
+    at requireEnv (lib\env.ts:9:11)
+    at eval (lib\env.ts:20:10)
+    at async Module.register (instrumentation.ts:6:5)
+
+# The server exited before it ever answered an HTTP request on port 3000.
