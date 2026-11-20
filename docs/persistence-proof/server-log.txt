@@ -1,0 +1,10 @@
+Dev server log while testing (npm run dev). DashboardLayout is a Server Component,
+so its console.log prints in the terminal, not the browser console.
+
+[DashboardLayout] rendered
+ GET /dashboard 200 in 179ms
+ # clicked "<- Collapse" in the Sidebar, then "Go to Settings ->" (client-side <Link>)
+ Compiled /dashboard/settings in 425ms
+ GET /dashboard/settings 200 in 558ms
+ # no second "[DashboardLayout] rendered": the layout did not re-render on in-section navigation
+ GET /about 200 in 600ms
