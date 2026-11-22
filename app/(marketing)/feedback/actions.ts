@@ -6,8 +6,10 @@
 //
 // Actions are public POST endpoints, so the input must be validated here even though
 // the form has its own fields - anyone can call the action with any FormData.
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
-import { saveFeedback } from "@/lib/feedback-store";
+import { FEEDBACK_TAG, saveFeedback } from "@/lib/feedback-store";
 
 const feedbackSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters"),
@@ -42,5 +44,12 @@ export async function submitFeedback(_prev: FeedbackState, formData: FormData): 
   }
 
   const entry = await saveFeedback({ name: parsed.data.name, message: parsed.data.message });
-  return { status: "success", message: `Thanks ${entry.name}! Saved as feedback #${entry.id}.` };
+
+  // The mutation succeeded -> refresh cached UI so readers see it immediately:
+  revalidateTag(FEEDBACK_TAG); // fine-grained: every cached read tagged "feedback" (any page)
+  revalidatePath("/feedback"); // path-based: re-render the /feedback route segment
+
+  // Then send the user to the updated list (Post/Redirect/Get - a browser refresh
+  // won't resubmit the form). redirect() throws, so nothing after it runs.
+  redirect(`/feedback?sent=${entry.id}`);
 }

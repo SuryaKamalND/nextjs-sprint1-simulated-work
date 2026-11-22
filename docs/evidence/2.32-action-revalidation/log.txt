@@ -1,0 +1,8 @@
+Production build (npm run build && npm start)
+
+GET /pricing before submit -> x-nextjs-cache: HIT
+/feedback before: "Recent feedback (1)"  (Ava)
+Submitted: Surya / surya@example.com / "The list updates instantly now"
+  action: saveFeedback -> revalidateTag("feedback") -> revalidatePath("/feedback") -> redirect("/feedback?sent=2")
+Browser landed on /feedback?sent=2: banner "Thanks! Your feedback #2 was saved..." + "Recent feedback (2)" with Surya on top (no manual refresh)
+GET /pricing after submit -> x-nextjs-cache: HIT  (route not using the tag was not invalidated)
