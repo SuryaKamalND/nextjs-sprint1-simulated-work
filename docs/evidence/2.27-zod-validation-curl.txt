@@ -1,0 +1,28 @@
+$ curl -i -X POST http://localhost:3000/api/tasks -H "Content-Type: application/json" -d '{"title":"Write PR description","priority":"high"}'
+HTTP/1.1 201 Created
+{"success":true,"data":{"id":"1","done":false,"title":"Write PR description","priority":"high"}}
+
+$ curl -i -X POST http://localhost:3000/api/tasks -H "Content-Type: application/json" -d '{"title":"ab","priority":"urgent"}'
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"formErrors":[],"fieldErrors":{"title":["title must be at least 3 characters"],"priority":["Invalid option: expected one of \"low\"|\"medium\"|\"high\""]}}}
+
+$ curl -i -X POST http://localhost:3000/api/tasks -H "Content-Type: application/json" -d '{"priority":"low"}'
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"formErrors":[],"fieldErrors":{"title":["Invalid input: expected string, received undefined"]}}}
+
+$ curl -i -X POST http://localhost:3000/api/tasks -H "Content-Type: application/json" -d '""'
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"formErrors":["Invalid input: expected object, received string"],"fieldErrors":{}}}
+
+$ curl -i http://localhost:3000/api/tasks
+HTTP/1.1 200 OK
+{"success":true,"data":[{"id":"1","done":false,"title":"Write PR description","priority":"high"}]}
+
+$ curl -i -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d '{"name":"Dev","email":"dev@example.com"}'
+HTTP/1.1 201 Created
+{"success":true,"data":{"id":"3","name":"Dev","email":"dev@example.com"}}
+
+$ curl -i -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d '{"name":"D","email":"not-an-email"}'
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"formErrors":[],"fieldErrors":{"name":["name must be at least 2 characters"],"email":["email must be a valid email address"]}}}
+
