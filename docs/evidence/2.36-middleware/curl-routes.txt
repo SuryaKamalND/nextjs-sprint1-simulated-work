@@ -1,0 +1,15 @@
+== Not signed in
+GET /dashboard                     -> 307 http://localhost:3000/login?callbackUrl=%2Fdashboard
+GET /dashboard/settings            -> 307 http://localhost:3000/login?callbackUrl=%2Fdashboard%2Fsettings
+GET /me                            -> 307 http://localhost:3000/login?callbackUrl=%2Fme
+GET /account?email=ava@example.com -> 307 http://localhost:3000/login?callbackUrl=%2Faccount%3Femail%3Dava%2540example.com
+GET /                              -> 200 
+GET /about                         -> 200 
+GET /blog/hello-world              -> 200 
+GET /login                         -> 200 
+
+== Signed in as demo@example.com (session cookie sent)
+GET /dashboard                     -> 200 
+GET /dashboard/settings            -> 200 
+GET /me                            -> 200 
+GET /                              -> 200 
