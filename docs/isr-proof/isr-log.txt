@@ -1,0 +1,12 @@
+Production server (npm run build && npm start), GET /pricing with revalidate = 60
+
+A  05:08:45  200   49ms  x-nextjs-cache=HIT    generatedAt=05:08:23.002Z  v1   (build-time page)
+B  05:08:45  200   11ms  x-nextjs-cache=HIT    generatedAt=05:08:23.002Z  v1
+   ... waited > 60 s ...
+C  05:09:33  200   71ms  x-nextjs-cache=STALE  generatedAt=05:08:23.002Z  v1   (old page served instantly, regeneration starts in background)
+D  05:09:35  200   11ms  x-nextjs-cache=HIT    generatedAt=05:09:33.895Z  v1   (regenerated page)
+
+On-demand: clicked "Update prices & revalidate now" (Server Action -> bumpPrices() + revalidatePath('/pricing'))
+E  05:09:47  200   28ms  x-nextjs-cache=MISS   generatedAt=05:09:47.416Z  v2   (cache was purged, re-rendered with new prices)
+F  05:09:47  200    8ms  x-nextjs-cache=HIT    generatedAt=05:09:47.416Z  v2
+   GET / (home) still x-nextjs-cache=HIT -> unrelated pages were not invalidated
