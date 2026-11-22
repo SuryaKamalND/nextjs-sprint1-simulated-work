@@ -22,6 +22,9 @@ export default async function MePage() {
     <section style={{ padding: "1.5rem", display: "grid", gap: "0.75rem", justifyItems: "start" }}>
       <h1>Signed in as {session.user.name}</h1>
       <p>Server Component sees: {session.user.email}</p>
+      <p>
+        From the JWT: id <code>{session.user.id}</code> · role <code>{session.user.role}</code>
+      </p>
       <ClientSessionBadge />
       <SignOutButton />
     </section>

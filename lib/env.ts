@@ -28,6 +28,10 @@ export const env = {
   stripe: {
     secretKey: requireEnv("STRIPE_SECRET_KEY"),
   },
+  auth: {
+    // Signs/encrypts session JWTs. Rotating it invalidates every existing session.
+    secret: requireEnv("NEXTAUTH_SECRET"),
+  },
 
   // Public variables - optional, with safe defaults
   public: {

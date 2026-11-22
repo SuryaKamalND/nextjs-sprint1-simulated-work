@@ -1,0 +1,15 @@
+Sign-in with curl against the dev server (credentials provider), then read the session.
+
+POST /api/auth/callback/credentials  ->  HTTP/1.1 200 OK
+set-cookie: next-auth.session-token=<encrypted JWT, redacted>; Path=/; Expires=Sun, 22 Nov 2026 13:41:39 GMT; HttpOnly; SameSite=Lax
+  - HttpOnly      -> not readable from page JavaScript
+  - SameSite=Lax  -> not sent on cross-site POSTs
+  - Expires       -> 8 h after sign-in (session.maxAge)
+  - Secure        -> enabled when NODE_ENV=production (cookie renamed __Secure-next-auth.session-token);
+                     off on http://localhost in dev, where browsers would refuse a Secure cookie
+
+GET /api/auth/session
+{"user":{"name":"Demo User","email":"demo@example.com","id":"1","role":"user"},"expires":"2026-11-22T13:41:39.432Z"}
+
+Token format: 5 dot-separated parts, header {"alg":"dir","enc":"A256GCM"} -> an ENCRYPTED JWT (JWE),
+so even the browser that holds it can't read the claims; only the server (with NEXTAUTH_SECRET) can.
