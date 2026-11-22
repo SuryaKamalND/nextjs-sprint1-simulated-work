@@ -1,0 +1,24 @@
+$ curl -i http://localhost:3000/api/users/1
+HTTP/1.1 200 OK
+{"success":true,"data":{"id":"1","name":"Ava","email":"ava@example.com"}}
+
+$ curl -i http://localhost:3000/api/users/2
+HTTP/1.1 200 OK
+{"success":true,"data":{"id":"2","name":"Ben","email":"ben@example.com"}}
+
+$ curl -i http://localhost:3000/api/users/999
+HTTP/1.1 404 Not Found
+{"success":false,"error":{"code":"NOT_FOUND","message":"User 999 not found"}}
+
+$ curl -i http://localhost:3000/api/users/abc
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"code":"INVALID_ID","message":"User id must be a positive integer"}}
+
+$ curl -i http://localhost:3000/api/users/-5
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"code":"INVALID_ID","message":"User id must be a positive integer"}}
+
+$ curl -i http://localhost:3000/api/users/1.5
+HTTP/1.1 400 Bad Request
+{"success":false,"error":{"code":"INVALID_ID","message":"User id must be a positive integer"}}
+
