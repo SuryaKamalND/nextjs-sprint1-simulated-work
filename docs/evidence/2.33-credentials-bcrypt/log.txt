@@ -1,0 +1,8 @@
+Dev server log during sign-up -> sign-in:
+
+[auth] registered demo@example.com hash=$2b$12$… (60 chars)   <- only a bcrypt hash is stored; $2b$ = bcrypt, 12 = salt rounds
+ POST /register 303   -> redirect to /login?registered=1
+ (wrong password)   -> "Invalid email or password."
+ (correct password) -> /me shows "Signed in as Demo User / demo@example.com"
+
+Searched the full server log and the repo for the plain-text test password: 0 matches.
