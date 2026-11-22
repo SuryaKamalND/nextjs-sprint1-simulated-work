@@ -1,22 +1,15 @@
-// app/(marketing)/blog/[slug]/page.tsx  ->  /blog/my-first-post, /blog/hello-world, ...
-// Single dynamic segment: exactly ONE URL segment after /blog is captured as params.slug.
-// Note: the static /blog/getting-started folder still wins over [slug] for that exact URL.
+// app/(marketing)/blog/[slug]/page.tsx  ->  /blog/hello-world, /blog/next-js-tips, ...
+// Static generation: generateStaticParams runs ONCE at build time and returns every
+// slug to pre-render. Each returned object's key (`slug`) must match the [slug] folder.
+// Requests for those slugs are then served as ready-made HTML - no data lookup per visit.
 import { notFound } from "next/navigation";
+import { getAllPosts, getPost } from "@/lib/posts";
 
-const posts: Record<string, { title: string; content: string }> = {
-  "my-first-post": {
-    title: "My First Post",
-    content: "This is the content of the first post.",
-  },
-  "hello-world": {
-    title: "Hello World",
-    content: "A classic introduction.",
-  },
-  "nextjs-routing": {
-    title: "Understanding Next.js Routing",
-    content: "Dynamic routes make building flexible apps easy.",
-  },
-};
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  // -> [{ slug: "hello-world" }, { slug: "next-js-tips" }, ...]
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export default async function BlogPostPage({
   params,
@@ -25,12 +18,10 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  // In a real app this would be a database lookup by slug.
-  const post = posts[slug];
+  const post = await getPost(slug);
 
   if (!post) {
-    // Throws internally: rendering stops here and the nearest not-found.tsx
-    // (app/(marketing)/blog/not-found.tsx) is shown with HTTP 404.
+    // Unknown slug -> nearest not-found.tsx (app/(marketing)/blog/not-found.tsx), HTTP 404.
     notFound();
   }
 

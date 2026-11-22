@@ -1,18 +1,23 @@
-// app/blog/page.tsx  ->  /blog
+// app/(marketing)/blog/page.tsx  ->  /blog
 import Link from "next/link";
+import { getAllPosts } from "@/lib/posts";
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const posts = await getAllPosts();
+
   return (
-    <main>
+    <section>
       <h1>Blog</h1>
       <ul>
         <li>
           <Link href="/blog/getting-started">Getting Started</Link>
         </li>
-        <li>
-          <Link href="/blog/announcing-our-launch">Announcing Our Launch</Link>
-        </li>
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+          </li>
+        ))}
       </ul>
-    </main>
+    </section>
   );
 }
