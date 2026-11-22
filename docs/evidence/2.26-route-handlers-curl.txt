@@ -1,0 +1,18 @@
+$ curl -i http://localhost:3000/api/users
+HTTP/1.1 200 OK
+{"success":true,"data":[{"id":"1","name":"Ava","email":"ava@example.com"},{"id":"2","name":"Ben","email":"ben@example.com"}]}
+
+$ curl -i -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d '{"name":"Cara","email":"cara@example.com"}'
+HTTP/1.1 201 Created
+{"success":true,"data":{"id":"3","name":"Cara","email":"cara@example.com"}}
+
+$ curl -i -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d '{"name":"","email":42}'
+HTTP/1.1 400 Bad Request
+{"success":false,"error":"name (non-empty string) and email (valid address) are required"}
+
+$ curl -i -X POST http://localhost:3000/api/users -d "not json"
+HTTP/1.1 400 Bad Request
+{"success":false,"error":"Body must be valid JSON"}
+
+$ curl -i -X DELETE http://localhost:3000/api/users
+HTTP/1.1 405 Method Not Allowed
