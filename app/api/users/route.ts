@@ -2,26 +2,22 @@
 // A route.ts file turns its folder into an API endpoint (no page, no Express server).
 // Each HTTP method is a NAMED export; any method not exported (PUT, DELETE...) gets
 // an automatic 405 Method Not Allowed.
-import { NextResponse } from "next/server";
 import { z } from "zod";
+import { created, fail, ok, withErrorHandling } from "@/lib/api-response";
 import { createUserSchema } from "@/lib/schemas";
 import { createUser, listUsers } from "@/lib/users-store";
 
-// GET /api/users -> 200 with the list
-export async function GET() {
-  return NextResponse.json({ success: true, data: listUsers() });
-}
+// GET /api/users -> 200 { success: true, data: [...] }
+export const GET = withErrorHandling(async () => ok(listUsers()));
 
-// POST /api/users  { "name": "...", "email": "..." } -> 201 with the created user
-export async function POST(req: Request) {
+// POST /api/users -> 201 created | 400 VALIDATION_ERROR
+export const POST = withErrorHandling(async (req: Request) => {
   const body = await req.json().catch(() => undefined);
 
-  // Validate first: invalid input never reaches createUser().
   const parsed = createUserSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ success: false, error: z.flattenError(parsed.error) }, { status: 400 });
+    return fail("VALIDATION_ERROR", "Invalid user data", 400, z.flattenError(parsed.error).fieldErrors);
   }
 
-  const user = createUser(parsed.data); // typed as CreateUserInput
-  return NextResponse.json({ success: true, data: user }, { status: 201 });
-}
+  return created(createUser(parsed.data));
+});
