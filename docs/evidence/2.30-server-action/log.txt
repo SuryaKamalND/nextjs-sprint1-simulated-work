@@ -1,0 +1,8 @@
+Browser network during submit:
+  GET  /feedback -> 200 (page load)
+  POST /feedback -> 200 (Server Action call made by Next.js; no fetch() in our code)
+
+Server log:
+  [feedback] saved #2 from Surya (pid 21144)
+
+UI after submit: "Thanks Surya! Saved as feedback #2." (value returned by the action)
