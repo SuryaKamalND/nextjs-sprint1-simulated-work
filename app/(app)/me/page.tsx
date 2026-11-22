@@ -3,6 +3,7 @@
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/lib/auth";
+import ClientSessionBadge from "./ClientSessionBadge";
 import SignOutButton from "./SignOutButton";
 
 export default async function MePage() {
@@ -18,9 +19,10 @@ export default async function MePage() {
   }
 
   return (
-    <section style={{ padding: "1.5rem" }}>
+    <section style={{ padding: "1.5rem", display: "grid", gap: "0.75rem", justifyItems: "start" }}>
       <h1>Signed in as {session.user.name}</h1>
-      <p>{session.user.email}</p>
+      <p>Server Component sees: {session.user.email}</p>
+      <ClientSessionBadge />
       <SignOutButton />
     </section>
   );
