@@ -4,7 +4,10 @@
 import "server-only";
 import bcrypt from "bcryptjs";
 
-export type Role = "user" | "admin";
+import type { Role } from "@/lib/rbac";
+
+export type { Role };
+// Every account has a role (default "user"); it is copied into the session JWT on sign-in.
 export type AuthUser = { id: string; email: string; name: string; passwordHash: string; role: Role };
 
 // 12 salt rounds: each hash takes ~200 ms - slow enough to make brute-forcing a
@@ -12,6 +15,22 @@ export type AuthUser = { id: string; email: string; name: string; passwordHash: 
 export const SALT_ROUNDS = 12;
 
 const store = ((globalThis as { __authUsers?: AuthUser[] }).__authUsers ??= []);
+
+// Development-only seed so the admin page can be demoed. Never seeded in production.
+if (process.env.NODE_ENV !== "production" && !store.some((u) => u.role === "admin")) {
+  store.push({
+    id: "admin-1",
+    email: "admin@example.com",
+    name: "Admin",
+    passwordHash: bcrypt.hashSync("admin-pass-123", SALT_ROUNDS),
+    role: "admin",
+  });
+}
+
+// Safe listing for the admin UI - never exposes password hashes.
+export function listAuthUsers() {
+  return store.map(({ id, email, name, role }) => ({ id, email, name, role }));
+}
 
 export async function findUserByEmail(email: string): Promise<AuthUser | undefined> {
   return store.find((u) => u.email === email.toLowerCase());
