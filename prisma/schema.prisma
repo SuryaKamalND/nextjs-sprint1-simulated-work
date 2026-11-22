@@ -1,0 +1,44 @@
+// prisma/schema.prisma - the single source of truth for the database shape.
+// Three parts: the datasource (which DB), the generator (what code to generate),
+// and the models (tables).
+
+// Which database to connect to. The URL comes from the environment, never the code.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// `prisma generate` reads the models below and writes a fully typed client
+// into node_modules/@prisma/client.
+generator client {
+  provider = "prisma-client-js"
+}
+
+// A model = a table. Each field = a column: name, type, then attributes.
+model User {
+  id        String   @id @default(cuid()) // primary key, auto-generated id
+  email     String   @unique // UNIQUE index: no two users share an email
+  name      String
+  role      Role     @default(USER) // defaults to USER when not provided
+  createdAt DateTime @default(now()) // filled in by the database on insert
+  posts     Post[] // one user -> many posts (relation, no column of its own)
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // set automatically on every update
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String // foreign key column -> User.id
+
+  @@index([authorId]) // speeds up "all posts by this author"
+}
+
+enum Role {
+  USER
+  ADMIN
+}

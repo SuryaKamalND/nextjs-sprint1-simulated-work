@@ -1,0 +1,10 @@
+Prisma schema loaded from prisma\schema.prisma
+The schema at prisma\schema.prisma is valid
+
+$ npx prisma generate
+Prisma schema loaded from prisma\schema.prisma
+✔ Generated Prisma Client (v6.19.3) to .
+ode_modules\@prisma\client in 84ms
+
+$ npx tsc --noEmit   (type-checks docs/prisma-client-example.ts against the generated types)
+(no errors)
