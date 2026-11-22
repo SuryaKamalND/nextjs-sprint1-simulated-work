@@ -1,0 +1,12 @@
+== Signed out
+GET /admin             -> 307 http://localhost:3000/login?callbackUrl=%2Fadmin | 
+GET /api/admin/users   -> 401  {"success":false,"error":{"code":"UNAUTHORIZED","message":"Sign in required"}}
+
+== Signed in as demo@example.com (role: user)
+GET /admin             -> 403  | Access denied
+GET /api/admin/users   -> 403  {"success":false,"error":{"code":"FORBIDDEN","message":"Admins only"}}
+GET /me                -> 200  | Signed in as 
+
+== Signed in as admin@example.com (role: admin)
+GET /admin             -> 200  | Admin: users
+GET /api/admin/users   -> 200  {"success":true,"data":[{"id":"1","email":"demo@example.com","name":"Demo User","role":"user"},{"id":"admin-1","email":"admin@example.com","name":"Admin","role"
